@@ -47,7 +47,7 @@ LONGITUDE VARCHAR(100) NOT NULL
 );
 
 /* 
-Atividade
+Atividade - 1
 
 Manipulação e validação de hipóteses
 Com os dados disponibilizados na base de dados em MySQL, a equipe deve validar as seguintes hipóteses:
