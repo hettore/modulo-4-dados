@@ -85,7 +85,13 @@ R:
 DICA: Observe como são estruturados os dados que descrevem os municípios/distrito/subdistritos elencados pelo IBGE. */
 
 /* 
+DDL - Data Definition Language - Linguagem de Definição de Dados.
+São os comandos que interagem com os objetos do banco.
+São comandos DDL : CREATE, ALTER e DROP
 
+DML - Data Manipulation Language - Linguagem de Manipulação de Dados.
+São os comandos que interagem com os dados dentro das tabelas.
+São comandos DML : INSERT, DELETE e UPDATE
  */
 
 
