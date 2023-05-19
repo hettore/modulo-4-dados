@@ -66,6 +66,22 @@ SELECT COUNT(*) FROM data_ubs WHERE UF=35; /*  Faz a contagem de quantas linhas 
 
 SELECT COUNT(*) FROM data_ubs WHERE uf BETWEEN 21 AND 29; /*  Faz a contagem de todas as linhas cadastradas que tenham uf=21;22;23;24;25;26;27;28 e 29  */
 
+/*  testes  */
+SELECT uf.uf, count(dt.CNES)
+FROM data_ubs AS dt
+INNER JOIN ubs_uf AS uf
+ON uf.codigo_uf = dt.uf
+WHERE uf.uf = 'sp';
+
+SELECT uf.uf, count(dt.CNES)
+FROM data_ubs AS dt
+INNER JOIN ubs_uf AS uf
+ON uf.codigo_uf = dt.uf
+WHERE dt.uf BETWEEN 21 AND 29
+group by UF;
+
+
+
 
 /*
 A maioria das UBSs, nos respectivos estados, estão localizados nas
@@ -73,10 +89,25 @@ regiões centrais das cidades (use como base os bairros intitulados
 como CENTRO).
 R:
 uf=11 - rondonia - centro=41, total=281 
+uf=12 - Acre - centro=27, total= 228
+
+
 */
 
 SELECT COUNT(*) FROM data_ubs WHERE UF = 11 AND bairro = 'centro';
 SELECT COUNT(*) FROM data_ubs WHERE UF = 11;
+
+SELECT COUNT(*) AS qtd_ubs_centro FROM data_ubs WHERE UF = 12 AND bairro = 'centro';
+SELECT COUNT(*) FROM data_ubs WHERE UF = 12;
+
+SELECT UF, count(UF) AS quantidade_ubs FROM data_ubs group by UF;
+
+
+SELECT UF, count(UF) AS quantidade_ubs FROM data_ubs group by UF
+UNION
+SELECT UF, count(BAIRRO) AS quantidade_ubs_centro FROM data_ubs WHERE BAIRRO='CENTRO' group by UF order by UF;
+
+select uf, count(uf)
 
 /*
 DESAFIO: Observe nos dados das UBSs que existe uma coluna intitulada “IBGE”. Crie
