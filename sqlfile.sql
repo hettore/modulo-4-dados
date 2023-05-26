@@ -64,21 +64,21 @@ SELECT * FROM ubs_uf; /*  Mostrar os estados e seus respectivos códigos sendo s
 
 SELECT COUNT(*) FROM data_ubs WHERE UF=35; /*  Faz a contagem de quantas linhas cadastradas que tenham uf=35 (São Paulo)  */
 
-SELECT COUNT(*) FROM data_ubs WHERE uf BETWEEN 21 AND 29; /*  Faz a contagem de todas as linhas cadastradas que tenham uf=21;22;23;24;25;26;27;28 e 29  */
+SELECT COUNT(*) as total FROM data_ubs WHERE uf BETWEEN 21 AND 29; /*  Faz a contagem de todas as linhas cadastradas que tenham uf=21;22;23;24;25;26;27;28 e 29  */
 
 /*  testes  */
-SELECT uf.uf, count(dt.CNES)
+SELECT uf.uf as Estado_ou_Região, count(dt.CNES) as Total_UBS
 FROM data_ubs AS dt
 INNER JOIN ubs_uf AS uf
 ON uf.codigo_uf = dt.uf
-WHERE uf.uf = 'sp';
-
-SELECT uf.uf, count(dt.CNES)
+WHERE uf.uf = 'sp'
+union
+SELECT 'Nordeste', SUM(Total_UBS) FROM (SELECT uf.uf, count(dt.CNES) as Total_UBS
 FROM data_ubs AS dt
 INNER JOIN ubs_uf AS uf
 ON uf.codigo_uf = dt.uf
 WHERE dt.uf BETWEEN 21 AND 29
-group by UF;
+group by UF) AS Q;
 
 
 
@@ -94,8 +94,10 @@ uf=12 - Acre - centro=27, total= 228
 
 */
 
-SELECT COUNT(*) FROM data_ubs WHERE UF = 11 AND bairro = 'centro';
-SELECT COUNT(*) FROM data_ubs WHERE UF = 11;
+SELECT uf as Estado, COUNT(*) as total_ubs_centro FROM data_ubs WHERE UF = 11 AND bairro = 'centro';
+
+
+SELECT COUNT(*) as total_ubs_estado FROM data_ubs WHERE UF = 11;
 
 SELECT COUNT(*) AS qtd_ubs_centro FROM data_ubs WHERE UF = 12 AND bairro = 'centro';
 SELECT COUNT(*) FROM data_ubs WHERE UF = 12;
@@ -107,9 +109,50 @@ SELECT UF, count(UF) AS quantidade_ubs FROM data_ubs group by UF
 UNION
 SELECT UF, count(BAIRRO) AS quantidade_ubs_centro FROM data_ubs WHERE BAIRRO='CENTRO' group by UF order by UF;
 
-select uf, count(uf)
+select uf, count(uf);
+
+SELECT uf.uf as Estado, count(dt.CNES) as Total_UBS, count(dt.bairro) as TOTAL_UBS_CENTRO
+FROM data_ubs AS dt
+INNER JOIN ubs_uf AS uf
+ON uf.codigo_uf = dt.uf
+WHERE uf.uf = 'sp'
+UNION 
+SELECT * FROM (SELECT uf.uf, count(dt.CNES) as Total_UBS, count(dt.bairro) as TOTAL_UBS_CENTRO
+FROM data_ubs AS dt
+INNER JOIN ubs_uf AS uf
+ON uf.codigo_uf = dt.uf
+WHERE dt.bairro = 'centro'
+group by UF) AS Q;
+
+
+SELECT * FROM (SELECT uf.uf, count(dt.CNES) as Total_UBS, (case
+	when dt.bairro = 'centro'
+    then 0
+    else 1 END)  as TOTAL_UBS_CENTRO
+FROM data_ubs AS dt
+INNER JOIN ubs_uf AS uf
+ON uf.codigo_uf = dt.uf
+group by UF) AS Q;
+
+-- SELECT data_ubs, ,
+-- CASE WHEN Quantity > 30 THEN 'The quantity is greater than 30'
+-- WHEN Quantity = 30 THEN 'The quantity is 30'
+-- ELSE 'The quantity is under 30'
+-- END AS QuantityText
+-- FROM OrderDetails;
+
+SELECT uf.uf as Estado, count(dt.CNES) as Total_UBS, count(dt.bairro) as TOTAL_UBS_CENTRO
+FROM data_ubs AS dt
+INNER JOIN ubs_uf AS uf
+ON uf.codigo_uf = dt.uf
+WHERE dt.uf = 35 and 11;
+
+
 
 /*
+sum TOTAL_UBS_CENTRO (case when bairro = 'centro' then 0 else 1 end)
+
+
 DESAFIO: Observe nos dados das UBSs que existe uma coluna intitulada “IBGE”. Crie
 um relatório que liste todas as UBS de um respectivo município/distrito/subdistrito.
 R:
