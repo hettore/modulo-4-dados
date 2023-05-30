@@ -111,28 +111,28 @@ SELECT UF, count(BAIRRO) AS quantidade_ubs_centro FROM data_ubs WHERE BAIRRO='CE
 
 select uf, count(uf);
 
-SELECT uf.uf as Estado, count(dt.CNES) as Total_UBS, count(dt.bairro) as TOTAL_UBS_CENTRO
-FROM data_ubs AS dt
-INNER JOIN ubs_uf AS uf
-ON uf.codigo_uf = dt.uf
-WHERE uf.uf = 'sp'
-UNION 
-SELECT * FROM (SELECT uf.uf, count(dt.CNES) as Total_UBS, count(dt.bairro) as TOTAL_UBS_CENTRO
-FROM data_ubs AS dt
-INNER JOIN ubs_uf AS uf
-ON uf.codigo_uf = dt.uf
-WHERE dt.bairro = 'centro'
-group by UF) AS Q;
+-- SELECT uf.uf as Estado, count(dt.CNES) as Total_UBS, count(dt.bairro) as TOTAL_UBS_CENTRO
+-- FROM data_ubs AS dt
+-- INNER JOIN ubs_uf AS uf
+-- ON uf.codigo_uf = dt.uf
+-- WHERE uf.uf = 'sp'
+-- UNION 
+-- SELECT * FROM (SELECT uf.uf, count(dt.CNES) as Total_UBS, count(dt.bairro) as TOTAL_UBS_CENTRO
+-- FROM data_ubs AS dt
+-- INNER JOIN ubs_uf AS uf
+-- ON uf.codigo_uf = dt.uf
+-- WHERE dt.bairro = 'centro'
+-- group by UF) AS Q;
 
 
-SELECT * FROM (SELECT uf.uf, count(dt.CNES) as Total_UBS, (case
-	when dt.bairro = 'centro'
-    then 0
-    else 1 END)  as TOTAL_UBS_CENTRO
-FROM data_ubs AS dt
-INNER JOIN ubs_uf AS uf
-ON uf.codigo_uf = dt.uf
-group by UF) AS Q;
+-- SELECT * FROM (SELECT uf.uf, count(dt.CNES) as Total_UBS, (case
+-- 	when dt.bairro = 'centro'
+--     then 0
+--     else 1 END)  as TOTAL_UBS_CENTRO
+-- FROM data_ubs AS dt
+-- INNER JOIN ubs_uf AS uf
+-- ON uf.codigo_uf = dt.uf
+-- group by UF) AS Q;
 
 -- SELECT data_ubs, ,
 -- CASE WHEN Quantity > 30 THEN 'The quantity is greater than 30'
@@ -141,53 +141,53 @@ group by UF) AS Q;
 -- END AS QuantityText
 -- FROM OrderDetails;
 
-SELECT uf.uf as UF, uf.unidade_da_federacao as estado, count(dt.CNES) as Total_UBS, (select count(dt.bairro) as TOTAL_UBS_CENTRO)
-FROM data_ubs AS dt
-INNER JOIN ubs_uf AS uf
-ON uf.codigo_uf = dt.uf
-WHERE dt.BAIRRO <> "CENTRO" 
-group by dt.UF;
+-- SELECT uf.uf as UF, uf.unidade_da_federacao as estado, count(dt.CNES) as Total_UBS, (select count(dt.bairro) as TOTAL_UBS_CENTRO)
+-- FROM data_ubs AS dt
+-- INNER JOIN ubs_uf AS uf
+-- ON uf.codigo_uf = dt.uf
+-- WHERE dt.BAIRRO <> "CENTRO" 
+-- group by dt.UF;
 
-SELECT ubs_uf.uf, COUNT(CNES) AS BAIRROS, (SELECT COUNT(BAIRRO) 
-FROM data_ubs INNER JOIN ubs_uf ON data_ubs.UF = ubs_uf.codigo_uf
-WHERE data_ubs.BAIRRO = 'CENTRO') AS CENTRO
-FROM data_ubs
-INNER JOIN ubs_uf
-ON data_ubs.UF = ubs_uf.codigo_uf
-WHERE BAIRRO <> 'CENTRO'
-GROUP BY ubs_uf.uf
-ORDER BY ubs_uf.uf;
+-- SELECT ubs_uf.uf, COUNT(CNES) AS BAIRROS, (SELECT COUNT(BAIRRO) 
+-- FROM data_ubs INNER JOIN ubs_uf ON data_ubs.UF = ubs_uf.codigo_uf
+-- WHERE data_ubs.BAIRRO = 'CENTRO') AS CENTRO
+-- FROM data_ubs
+-- INNER JOIN ubs_uf
+-- ON data_ubs.UF = ubs_uf.codigo_uf
+-- WHERE BAIRRO <> 'CENTRO'
+-- GROUP BY ubs_uf.uf
+-- ORDER BY ubs_uf.uf;
 
-SELECT ubs_uf.uf, COUNT(data_ubs.CNES) AS BAIRROS,
-       (SELECT COUNT(data_ubs.BAIRRO)
-        FROM data_ubs
-        INNER JOIN ubs_uf ON data_ubs.UF = ubs_uf.codigo_uf
-        WHERE data_ubs.BAIRRO = 'CENTRO'
-        AND ubs_uf.uf = data_ubs.uf
-       ) AS CENTRO
-FROM data_ubs
-INNER JOIN ubs_uf ON data_ubs.UF = ubs_uf.codigo_uf
-WHERE data_ubs.BAIRRO <> 'CENTRO'
-GROUP BY ubs_uf.uf
-ORDER BY ubs_uf.uf;
+-- SELECT ubs_uf.uf, COUNT(data_ubs.CNES) AS BAIRROS,
+--        (SELECT COUNT(data_ubs.BAIRRO)
+--         FROM data_ubs
+--         INNER JOIN ubs_uf ON data_ubs.UF = ubs_uf.codigo_uf
+--         WHERE data_ubs.BAIRRO = 'CENTRO'
+--         AND ubs_uf.uf = data_ubs.uf
+--        ) AS CENTRO
+-- FROM data_ubs
+-- INNER JOIN ubs_uf ON data_ubs.UF = ubs_uf.codigo_uf
+-- WHERE data_ubs.BAIRRO <> 'CENTRO'
+-- GROUP BY ubs_uf.uf
+-- ORDER BY ubs_uf.uf;
 
 /*  deu certo!  */
-SELECT ubs_uf.codigo_uf as UF, ubs_uf.unidade_da_federacao AS ESTADO,
-       COUNT(data_ubs.CNES) AS UBS_MENOS_BAIRRO,
-       (SELECT COUNT(CNES) AS centro
-        FROM data_ubs
-        WHERE data_ubs.bairro = "centro" AND data_ubs.uf = ubs_uf.codigo_uf) AS UBS_CENTRO
-FROM data_ubs
-INNER JOIN ubs_uf ON data_ubs.uf = ubs_uf.codigo_uf
-WHERE data_ubs.bairro <> "centro"
-GROUP BY data_ubs.uf;
+-- SELECT ubs_uf.codigo_uf as UF, ubs_uf.unidade_da_federacao AS ESTADO,
+--        COUNT(data_ubs.CNES) AS UBS_MENOS_BAIRRO,
+--        (SELECT COUNT(CNES) AS centro
+--         FROM data_ubs
+--         WHERE data_ubs.bairro = "centro" AND data_ubs.uf = ubs_uf.codigo_uf) AS UBS_CENTRO
+-- FROM data_ubs
+-- INNER JOIN ubs_uf ON data_ubs.uf = ubs_uf.codigo_uf
+-- WHERE data_ubs.bairro <> "centro"
+-- GROUP BY data_ubs.uf;
 
 /*  Da certo com o total!  */
 SELECT data_ubs.uf AS UF, ubs_uf.unidade_da_federacao AS ESTADO,
        (SELECT COUNT(CNES)
         FROM data_ubs
         WHERE data_ubs.bairro = "centro" AND data_ubs.uf = ubs_uf.codigo_uf) AS UBS_CENTRO,
-       COUNT(data_ubs.CNES) AS UBS_MENOS_BAIRRO,
+       COUNT(data_ubs.CNES) AS UBS_MENOS_CENTRO,
        (SELECT COUNT(CNES)
         FROM data_ubs
         WHERE data_ubs.uf = ubs_uf.codigo_uf) AS TOTAL_UBS
