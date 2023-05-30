@@ -141,13 +141,60 @@ group by UF) AS Q;
 -- END AS QuantityText
 -- FROM OrderDetails;
 
-SELECT uf.uf as Estado, count(dt.CNES) as Total_UBS, count(dt.bairro) as TOTAL_UBS_CENTRO
+SELECT uf.uf as UF, uf.unidade_da_federacao as estado, count(dt.CNES) as Total_UBS, (select count(dt.bairro) as TOTAL_UBS_CENTRO)
 FROM data_ubs AS dt
 INNER JOIN ubs_uf AS uf
 ON uf.codigo_uf = dt.uf
-WHERE dt.uf = 35 and 11;
+WHERE dt.BAIRRO <> "CENTRO" 
+group by dt.UF;
 
+SELECT ubs_uf.uf, COUNT(CNES) AS BAIRROS, (SELECT COUNT(BAIRRO) 
+FROM data_ubs INNER JOIN ubs_uf ON data_ubs.UF = ubs_uf.codigo_uf
+WHERE data_ubs.BAIRRO = 'CENTRO') AS CENTRO
+FROM data_ubs
+INNER JOIN ubs_uf
+ON data_ubs.UF = ubs_uf.codigo_uf
+WHERE BAIRRO <> 'CENTRO'
+GROUP BY ubs_uf.uf
+ORDER BY ubs_uf.uf;
 
+SELECT ubs_uf.uf, COUNT(data_ubs.CNES) AS BAIRROS,
+       (SELECT COUNT(data_ubs.BAIRRO)
+        FROM data_ubs
+        INNER JOIN ubs_uf ON data_ubs.UF = ubs_uf.codigo_uf
+        WHERE data_ubs.BAIRRO = 'CENTRO'
+        AND ubs_uf.uf = data_ubs.uf
+       ) AS CENTRO
+FROM data_ubs
+INNER JOIN ubs_uf ON data_ubs.UF = ubs_uf.codigo_uf
+WHERE data_ubs.BAIRRO <> 'CENTRO'
+GROUP BY ubs_uf.uf
+ORDER BY ubs_uf.uf;
+
+/*  deu certo!  */
+SELECT ubs_uf.codigo_uf as UF, ubs_uf.unidade_da_federacao AS ESTADO,
+       COUNT(data_ubs.CNES) AS UBS_MENOS_BAIRRO,
+       (SELECT COUNT(CNES) AS centro
+        FROM data_ubs
+        WHERE data_ubs.bairro = "centro" AND data_ubs.uf = ubs_uf.codigo_uf) AS UBS_CENTRO
+FROM data_ubs
+INNER JOIN ubs_uf ON data_ubs.uf = ubs_uf.codigo_uf
+WHERE data_ubs.bairro <> "centro"
+GROUP BY data_ubs.uf;
+
+/*  Da certo com o total!  */
+SELECT data_ubs.uf AS UF, ubs_uf.unidade_da_federacao AS ESTADO,
+       (SELECT COUNT(CNES)
+        FROM data_ubs
+        WHERE data_ubs.bairro = "centro" AND data_ubs.uf = ubs_uf.codigo_uf) AS num_centro,
+       COUNT(data_ubs.CNES) AS num_bairros,
+       (SELECT COUNT(CNES)
+        FROM data_ubs
+        WHERE data_ubs.uf = ubs_uf.codigo_uf) AS total_por_estado
+FROM data_ubs
+INNER JOIN ubs_uf ON data_ubs.uf = ubs_uf.codigo_uf
+WHERE data_ubs.bairro <> "centro"
+GROUP BY data_ubs.uf, ubs_uf.codigo_uf;
 
 /*
 sum TOTAL_UBS_CENTRO (case when bairro = 'centro' then 0 else 1 end)
