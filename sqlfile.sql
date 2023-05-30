@@ -186,11 +186,11 @@ GROUP BY data_ubs.uf;
 SELECT data_ubs.uf AS UF, ubs_uf.unidade_da_federacao AS ESTADO,
        (SELECT COUNT(CNES)
         FROM data_ubs
-        WHERE data_ubs.bairro = "centro" AND data_ubs.uf = ubs_uf.codigo_uf) AS num_centro,
-       COUNT(data_ubs.CNES) AS num_bairros,
+        WHERE data_ubs.bairro = "centro" AND data_ubs.uf = ubs_uf.codigo_uf) AS UBS_CENTRO,
+       COUNT(data_ubs.CNES) AS UBS_MENOS_BAIRRO,
        (SELECT COUNT(CNES)
         FROM data_ubs
-        WHERE data_ubs.uf = ubs_uf.codigo_uf) AS total_por_estado
+        WHERE data_ubs.uf = ubs_uf.codigo_uf) AS TOTAL_UBS
 FROM data_ubs
 INNER JOIN ubs_uf ON data_ubs.uf = ubs_uf.codigo_uf
 WHERE data_ubs.bairro <> "centro"
