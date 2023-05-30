@@ -6,34 +6,39 @@ CREATE TABLE ubs_uf (
 codigo_uf int PRIMARY KEY not null,
 unidade_da_federacao varchar(50) NOT NULL,
 uf char(2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4; /*  Comando para criar uma tabela já incluindo o título da coluna obs: tabela ainda sem conteúdo  */
+); /*  Comando para criar uma tabela já incluindo o título da coluna obs: tabela ainda sem conteúdo  */
 
 insert INTO ubs_uf (
 codigo_uf,
 unidade_da_federacao,
-uf) values (52, 'Goiás', 'GO'); /*  Comando para inserir dados manualmente, necessário informar o título da coluna e depois passar os valores   */
+uf) values (52, 'Goiás', 'GO'); 
+/*  Comando para inserir dados manualmente, necessário informar o título da coluna e depois passar os valores   */
 
-UPDATE ubs_uf SET uf='SP' WHERE codigo_uf=35; /*  Comando para atualizar um registro especifico usando o WHERE  */
+UPDATE ubs_uf SET uf='SP' WHERE codigo_uf=35; 
+/*  Comando para atualizar um registro especifico usando o WHERE  */
 
 SELECT * FROM ubs_uf; /*  Comando para mostrar todo o conteúdo de uma tabela  */
 
 SELECT * FROM data_ubs; /*  Comando para mostrar todo o conteúdo de uma tabela  */
 
-SELECT COUNT(*) FROM ubs_uf; /*  Comando para contar a  quantidade de linhas dentro de uma tabela  */
+SELECT COUNT(*) as TOTAL_DE_LINHAS FROM ubs_uf; /*  Comando para contar a  quantidade de linhas dentro de uma tabela  */
 
-SELECT COUNT(*) FROM data_ubs; /*  Comando para contar a  quantidade de linhas dentro de uma tabela  */
+SELECT COUNT(*) as TOTAL_DE_LINHAS FROM data_ubs; /*  Comando para contar a  quantidade de linhas dentro de uma tabela  */
 
 truncate table ubs_uf; /*  Comando para apagar todo o conteúdo de uma tabela  */
 
 truncate table data_ubs;
+/* Apaga todas as linhas de uma tabela */
 
-drop table data_ubs; /*  Comando para apagar uma tabela inteira  */
+drop table data_ubs; 
+/*  Comando para apagar uma tabela inteira  */
 
 ALTER DATABASE ubs DEFAULT CHARACTER SET utf8mb4 COLLATE utf8_general_ci; /*  Comando para mudar o encoding  */
  
 SELECT * FROM ubs_uf where unidade_da_federacao = 'Rondônia'; 
 
-DELETE from ubs_uf where codigo_uf='52'; /*  Comando para apagar uma linha que tenha um conteúdo especifico usando o where  */
+DELETE from ubs_uf where codigo_uf='52'; 
+/*  Comando para apagar uma linha que tenha um conteúdo especifico usando o where  */
 
 CREATE TABLE data_ubs (
 CNES INT PRIMARY KEY NOT NULL,
@@ -54,7 +59,7 @@ Com os dados disponibilizados na base de dados em MySQL, a equipe deve validar a
 
 O estado de São Paulo (SP) possui um número de UBSs maior que o
 somatório de todas as UBSs dos estados da região nordeste.
-R:  Não.
+R:  Falso.
 Estados do nordeste -
 Maranhão, São Luís; Piauí, Teresina; Ceará, Fortaleza; Rio Grande do Norte, Natal; Paraíba, João Pessoa; Pernambuco, Recife; Alagoas, Maceió; Sergipe, Aracaju; e Bahia, Salvador
 São paulo = 5031 unidades;
@@ -62,9 +67,11 @@ nordeste = 15463 unidades.
 */
 SELECT * FROM ubs_uf; /*  Mostrar os estados e seus respectivos códigos sendo sp=35 e estados do nordeste de 21 à 29*/
 
-SELECT COUNT(*) FROM data_ubs WHERE UF=35; /*  Faz a contagem de quantas linhas cadastradas que tenham uf=35 (São Paulo)  */
+SELECT COUNT(*) as TOTAL_UBS_SP FROM data_ubs WHERE UF=35; 
+/*  Faz a contagem de quantas linhas cadastradas que tenham uf=35 (São Paulo)  */
 
-SELECT COUNT(*) as total FROM data_ubs WHERE uf BETWEEN 21 AND 29; /*  Faz a contagem de todas as linhas cadastradas que tenham uf=21;22;23;24;25;26;27;28 e 29  */
+SELECT COUNT(*) as TOTAL_UBS_NORDESTE FROM data_ubs WHERE uf BETWEEN 21 AND 29; 
+/*  Faz a contagem de todas as linhas cadastradas que tenham uf=21;22;23;24;25;26;27;28 e 29  */
 
 /*  testes  */
 SELECT uf.uf as Estado_ou_Região, count(dt.CNES) as Total_UBS
@@ -80,18 +87,13 @@ ON uf.codigo_uf = dt.uf
 WHERE dt.uf BETWEEN 21 AND 29
 group by UF) AS Q;
 
-
-
-
 /*
 A maioria das UBSs, nos respectivos estados, estão localizados nas
 regiões centrais das cidades (use como base os bairros intitulados
 como CENTRO).
-R:
+R: Falso.
 uf=11 - rondonia - centro=41, total=281 
 uf=12 - Acre - centro=27, total= 228
-
-
 */
 
 SELECT uf as Estado, COUNT(*) as total_ubs_centro FROM data_ubs WHERE UF = 11 AND bairro = 'centro';
@@ -104,83 +106,11 @@ SELECT COUNT(*) FROM data_ubs WHERE UF = 12;
 
 SELECT UF, count(UF) AS quantidade_ubs FROM data_ubs group by UF;
 
-
 SELECT UF, count(UF) AS quantidade_ubs FROM data_ubs group by UF
 UNION
 SELECT UF, count(BAIRRO) AS quantidade_ubs_centro FROM data_ubs WHERE BAIRRO='CENTRO' group by UF order by UF;
 
 select uf, count(uf);
-
--- SELECT uf.uf as Estado, count(dt.CNES) as Total_UBS, count(dt.bairro) as TOTAL_UBS_CENTRO
--- FROM data_ubs AS dt
--- INNER JOIN ubs_uf AS uf
--- ON uf.codigo_uf = dt.uf
--- WHERE uf.uf = 'sp'
--- UNION 
--- SELECT * FROM (SELECT uf.uf, count(dt.CNES) as Total_UBS, count(dt.bairro) as TOTAL_UBS_CENTRO
--- FROM data_ubs AS dt
--- INNER JOIN ubs_uf AS uf
--- ON uf.codigo_uf = dt.uf
--- WHERE dt.bairro = 'centro'
--- group by UF) AS Q;
-
-
--- SELECT * FROM (SELECT uf.uf, count(dt.CNES) as Total_UBS, (case
--- 	when dt.bairro = 'centro'
---     then 0
---     else 1 END)  as TOTAL_UBS_CENTRO
--- FROM data_ubs AS dt
--- INNER JOIN ubs_uf AS uf
--- ON uf.codigo_uf = dt.uf
--- group by UF) AS Q;
-
--- SELECT data_ubs, ,
--- CASE WHEN Quantity > 30 THEN 'The quantity is greater than 30'
--- WHEN Quantity = 30 THEN 'The quantity is 30'
--- ELSE 'The quantity is under 30'
--- END AS QuantityText
--- FROM OrderDetails;
-
--- SELECT uf.uf as UF, uf.unidade_da_federacao as estado, count(dt.CNES) as Total_UBS, (select count(dt.bairro) as TOTAL_UBS_CENTRO)
--- FROM data_ubs AS dt
--- INNER JOIN ubs_uf AS uf
--- ON uf.codigo_uf = dt.uf
--- WHERE dt.BAIRRO <> "CENTRO" 
--- group by dt.UF;
-
--- SELECT ubs_uf.uf, COUNT(CNES) AS BAIRROS, (SELECT COUNT(BAIRRO) 
--- FROM data_ubs INNER JOIN ubs_uf ON data_ubs.UF = ubs_uf.codigo_uf
--- WHERE data_ubs.BAIRRO = 'CENTRO') AS CENTRO
--- FROM data_ubs
--- INNER JOIN ubs_uf
--- ON data_ubs.UF = ubs_uf.codigo_uf
--- WHERE BAIRRO <> 'CENTRO'
--- GROUP BY ubs_uf.uf
--- ORDER BY ubs_uf.uf;
-
--- SELECT ubs_uf.uf, COUNT(data_ubs.CNES) AS BAIRROS,
---        (SELECT COUNT(data_ubs.BAIRRO)
---         FROM data_ubs
---         INNER JOIN ubs_uf ON data_ubs.UF = ubs_uf.codigo_uf
---         WHERE data_ubs.BAIRRO = 'CENTRO'
---         AND ubs_uf.uf = data_ubs.uf
---        ) AS CENTRO
--- FROM data_ubs
--- INNER JOIN ubs_uf ON data_ubs.UF = ubs_uf.codigo_uf
--- WHERE data_ubs.BAIRRO <> 'CENTRO'
--- GROUP BY ubs_uf.uf
--- ORDER BY ubs_uf.uf;
-
-/*  deu certo!  */
--- SELECT ubs_uf.codigo_uf as UF, ubs_uf.unidade_da_federacao AS ESTADO,
---        COUNT(data_ubs.CNES) AS UBS_MENOS_BAIRRO,
---        (SELECT COUNT(CNES) AS centro
---         FROM data_ubs
---         WHERE data_ubs.bairro = "centro" AND data_ubs.uf = ubs_uf.codigo_uf) AS UBS_CENTRO
--- FROM data_ubs
--- INNER JOIN ubs_uf ON data_ubs.uf = ubs_uf.codigo_uf
--- WHERE data_ubs.bairro <> "centro"
--- GROUP BY data_ubs.uf;
 
 /*  Da certo com o total!  */
 SELECT data_ubs.uf AS UF, ubs_uf.unidade_da_federacao AS ESTADO,
