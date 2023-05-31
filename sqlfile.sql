@@ -79,7 +79,7 @@ FROM data_ubs AS dt
 INNER JOIN ubs_uf AS uf
 ON uf.codigo_uf = dt.uf
 WHERE uf.uf = 'sp'
-union
+UNION
 SELECT 'Nordeste', SUM(Total_UBS) FROM (SELECT uf.uf, count(dt.CNES) as Total_UBS
 FROM data_ubs AS dt
 INNER JOIN ubs_uf AS uf
@@ -97,9 +97,10 @@ uf=12 - Acre - centro=27, total= 228
 */
 
 SELECT uf as Estado, COUNT(*) as total_ubs_centro FROM data_ubs WHERE UF = 11 AND bairro = 'centro';
+/* Consulta a sigla do estado e retorna com a condição de ser 11 que é São Paulo e ser bairro centro */
 
-
-SELECT COUNT(*) as total_ubs_estado FROM data_ubs WHERE UF = 11;
+SELECT uf as CODIGO_UF, COUNT(*) as total_ubs_estado FROM data_ubs WHERE UF = 11;
+/* Consulta a sigla do estado e retorna o total de ubs do estado */
 
 SELECT COUNT(*) AS qtd_ubs_centro FROM data_ubs WHERE UF = 12 AND bairro = 'centro';
 SELECT COUNT(*) FROM data_ubs WHERE UF = 12;
@@ -125,6 +126,18 @@ FROM data_ubs
 INNER JOIN ubs_uf ON data_ubs.uf = ubs_uf.codigo_uf
 WHERE data_ubs.bairro <> "centro"
 GROUP BY data_ubs.uf, ubs_uf.codigo_uf;
+
+ALTER TABLE ubs_uf ADD primary key (codigo_uf);
+/*  Comando para adicionar um campo como chave primária  */
+
+ALTER TABLE ubs_uf 
+CHANGE uf uf int;
+/* Comando para alterar o nome e o tipo de dado */
+
+ALTER TABLE ubs_uf
+RENAME COLUMN codigo_uf TO codigo_uff;
+/* Comando para renomear o nome da coluna */
+
 
 /*
 sum TOTAL_UBS_CENTRO (case when bairro = 'centro' then 0 else 1 end)
