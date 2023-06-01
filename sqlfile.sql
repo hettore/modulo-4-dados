@@ -127,8 +127,6 @@ SELECT UF, count(UF) AS quantidade_ubs FROM data_ubs group by UF
 UNION
 SELECT UF, count(BAIRRO) AS quantidade_ubs_centro FROM data_ubs WHERE BAIRRO='CENTRO' group by UF order by UF;
 
-SELECT uf, count(uf);
-
 /*  Da certo com o total!  */
 SELECT data_ubs.uf AS UF, ubs_uf.unidade_da_federacao AS ESTADO,
        (SELECT COUNT(CNES)
@@ -154,10 +152,8 @@ ALTER TABLE ubs_uf
 RENAME COLUMN codigo_uf TO codigo_uff;
 /* Comando para renomear o nome da coluna */
 
-
 /*
 sum TOTAL_UBS_CENTRO (case when bairro = 'centro' then 0 else 1 end)
-
 
 DESAFIO: Observe nos dados das UBSs que existe uma coluna intitulada “IBGE”. Crie
 um relatório que liste todas as UBS de um respectivo município/distrito/subdistrito.
@@ -179,7 +175,7 @@ SELECT du.UF AS Cod_Estado, du.IBGE AS Cod_IBGE_cidade, dt.MUNICIPIO AS CIDADE, 
 FROM data_municipios AS dt
 INNER JOIN data_ubs AS du
 ON dt.IBGE = du.IBGE
-WHERE dt.MUNICIPIO = 'Rio de janeiro';
+WHERE dt.MUNICIPIO = 'maragogipe';
 
 SELECT * FROM data_municipios;
 
@@ -192,6 +188,3 @@ DML - Data Manipulation Language - Linguagem de Manipulação de Dados.
 São os comandos que interagem com os dados dentro das tabelas.
 São comandos DML : INSERT, DELETE e UPDATE
  */
-
-
- 
