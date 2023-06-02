@@ -1,6 +1,6 @@
 # Trabalho de conclusão do módulo sobre banco de dados MySql - Escola Korú :floppy_disk: 🦉
 
-Para montar o banco e conseguir fazer as consultas é necessario tem o ambiente MySQL Workbench configurado e baixar os arquivos que estão 
+Para montar o banco e conseguir fazer as consultas é necessário tem o ambiente MySQL Workbench configurado e baixar os arquivos que estão 
 [aqui](https://github.com/hettore/modulo-4-dados/tree/main/arquivos) na pasta arquivos, depois desses passos podemos continuar criando o banco de dados, 
 dando o USE no banco conforme a imagem abaixo:
 
