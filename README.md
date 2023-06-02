@@ -22,5 +22,5 @@ criadas anteriormente segue os arquivos: [arquivo1](https://github.com/hettore/m
 Para mais informações e entendimento do trabalho acesse o slide completo...
 
 
-Acesse o trabalho completo :book :
+Acesse o trabalho completo 📚
 [Trabalho completo](https://docs.google.com/presentation/d/1EXB24kSaFeoAuPHzg4uQ6KidEwDupd4bbfL4sNHsyZA/edit?usp=sharing)
